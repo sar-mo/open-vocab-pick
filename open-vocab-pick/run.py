@@ -4,11 +4,11 @@ from habitat_baselines.run import execute_exp
 
 from omegaconf import DictConfig
 
-
+# figure out what the hydra main thing does
 @hydra.main(
     version_base=None,
     config_path="../",
-    config_name="config",
+    config_name="rl_skill",
 )
 def main(cfg: DictConfig):
     cfg = patch_config(cfg)
