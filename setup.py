@@ -1,11 +1,3 @@
-import setuptools
+from setuptools import setup
 
-setuptools.setup(
-    name="open_vocab_pick",
-    version="0.1",
-    author="Sarthak Mohanty",
-    author_email="sar-mo@github",
-    description="Open Vocab Grasping for habitat",
-    url="https://github.com/sar-mo/open-vocab-pick",
-    packages=setuptools.find_packages(),
-)
+setup()

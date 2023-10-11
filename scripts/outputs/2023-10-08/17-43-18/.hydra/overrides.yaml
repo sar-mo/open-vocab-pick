@@ -1,4 +1,0 @@
-- habitat_baselines.evaluate=False
-- habitat_baselines.tensorboard_dir=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/train/tb_pick_replica_test
-- habitat_baselines.checkpoint_folder=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/train/checkpoints_pick_replica_test
-- habitat_baselines.num_environments=20
