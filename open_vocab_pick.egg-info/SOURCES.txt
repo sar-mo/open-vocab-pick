@@ -1,0 +1,8 @@
+README.md
+setup.py
+open_vocab_pick/__init__.py
+open_vocab_pick/run.py
+open_vocab_pick.egg-info/PKG-INFO
+open_vocab_pick.egg-info/SOURCES.txt
+open_vocab_pick.egg-info/dependency_links.txt
+open_vocab_pick.egg-info/top_level.txt

@@ -8,7 +8,7 @@ from omegaconf import DictConfig
 @hydra.main(
     version_base=None,
     config_path="../",
-    config_name="rl_skill",
+    config_name="rl_skill_updated_sensors",
 )
 def main(cfg: DictConfig):
     cfg = patch_config(cfg)

@@ -1,7 +1,7 @@
 import setuptools
 
 setuptools.setup(
-    name="open-vocab-pick",
+    name="open_vocab_pick",
     version="0.1",
     author="Sarthak Mohanty",
     author_email="sar-mo@github",
