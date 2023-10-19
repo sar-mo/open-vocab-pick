@@ -62,16 +62,16 @@ python -m habitat_sim.utils.datasets_download \
 python -m habitat_sim.utils.datasets_download \
   --username $MATTERPORT_TOKEN_ID --password $MATTERPORT_TOKEN_SECRET \
   --uids hm3d_val_v0.2 \
-  --data-path $DATA_DIR 
+  --data-path $DATA_DIR
 ``` -->
 4. If you are using Spot, its URDF can be downloaded from [habitat-sim](https://github.com/facebookresearch/habitat-sim):
 ```bash
 python -m habitat_sim.utils.datasets_download \
   --uids hab_spot_arm \
-  --data-path $DATA_DIR 
+  --data-path $DATA_DIR
 ```
 
-<!-- 
+<!--
 ## Episode generation
 
 To generate episodes, run the following command to understand how to specify the arguments, then run it with the appropriate arguments:
@@ -145,15 +145,15 @@ Here is an example command for training a policy:
 ```bash
 python -um robot_nav.run \
     --config-path=../ \
-    --config-name=ver_hm3d_robot_nav 
+    --config-name=ver_hm3d_robot_nav
 ```
 
 # Citation
 If you use this code in your research, please cite our paper:
 ```
 @inproceedings{truong2022kin2dyn,
-    title={Rethinking Sim2Real: Lower Fidelity Simulation Leads to Higher Sim2Real Transfer in Navigation}, 
-    author={Joanne Truong and Max Rudolph and Naoki Yokoyama and Sonia Chernova and Dhruv Batra and Akshara Rai}, 
+    title={Rethinking Sim2Real: Lower Fidelity Simulation Leads to Higher Sim2Real Transfer in Navigation},
+    author={Joanne Truong and Max Rudolph and Naoki Yokoyama and Sonia Chernova and Dhruv Batra and Akshara Rai},
     booktitle={Conference on Robot Learning (CoRL)},
     year={2022}
 }

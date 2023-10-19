@@ -1,4 +1,3 @@
-
 # import habitat_sim
 
 # GOAL_CATEGORIES = [
@@ -39,4 +38,3 @@
 # for obj in sim.semantic_scene.objects:
 #     if obj.category.name("") in GOAL_CATEGORIES:
 #         print(obj.category.name(""), obj.obb.center, obj.aabb.center, obj.obb.sizes)
-   

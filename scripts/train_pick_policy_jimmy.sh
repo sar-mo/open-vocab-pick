@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=pick_jimmy_train_50_checkpoints
+#SBATCH --job-name=pick_jimmy_check_vram2
 #SBATCH --chdir /srv/cvmlp-lab/flash1/smohanty61/habitat-lab
-#SBATCH --output=/srv/cvmlp-lab/flash1/smohanty61/checkpoint/train/pick_jimmy.log
-#SBATCH --error=/srv/cvmlp-lab/flash1/smohanty61/checkpoint/train/pick_jimmy.err
+#SBATCH --output=/srv/cvmlp-lab/flash1/smohanty61/checkpoint/train/pick_jimmy_check_vram2.log
+#SBATCH --error=/srv/cvmlp-lab/flash1/smohanty61/checkpoint/train/pick_jimmy_check_vram2.err
 #SBATCH --gres gpu:2
 #SBATCH --cpus-per-task 6
 #SBATCH --nodes 1
@@ -16,9 +16,9 @@ srun /nethome/smohanty61/flash/miniconda/envs/clip_grip/bin/python -u -m habitat
     benchmark/rearrange=pick_spot \
     habitat.environment.max_episode_steps=1250 \
     habitat_baselines.evaluate=False \
-    habitat_baselines.tensorboard_dir=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/train/tb_pick_jimmy \
-    habitat_baselines.video_dir=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/train/video_pick_jimmy \
-    habitat_baselines.checkpoint_folder=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/train/checkpoints_pick_jimmy \
+    habitat_baselines.tensorboard_dir=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/train/tb_pick_jimmy_check_vram2 \
+    habitat_baselines.video_dir=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/train/video_pick_jimmy_check_vram2 \
+    habitat_baselines.checkpoint_folder=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/train/checkpoints_pick_jimmy_check_vram2 \
     habitat_baselines.num_checkpoints=50 \
     habitat.simulator.kinematic_mode=True \
     habitat.simulator.ac_freq_ratio=1 \
@@ -32,7 +32,7 @@ srun /nethome/smohanty61/flash/miniconda/envs/clip_grip/bin/python -u -m habitat
     habitat.task.measurements.pick_reward.max_force_pen=0.01 \
     habitat.task.measurements.pick_reward.force_end_pen=1.0 \
     habitat.task.measurements.collisions_terminate.max_scene_colls=100.0 \
-    habitat_baselines.num_environments=21 \
+    habitat_baselines.num_environments=5 \
     habitat_baselines.load_resume_state_config=False
 
 # he had 24 envs

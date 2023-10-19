@@ -16,11 +16,11 @@ srun /nethome/smohanty61/flash/miniconda/envs/clip_grip/bin/python -u -m open_vo
     habitat_baselines.evaluate=True \
     habitat_baselines.tensorboard_dir=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/eval/tb_pick_teacher \
     habitat_baselines.checkpoint_folder=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/eval/checkpoints_pick_teacher \
-    habitat_baselines.num_environments=21 \
+    habitat_baselines.num_environments=5 \
     habitat_baselines.load_resume_state_config=False \
-    habitat_baselines.eval.video_option='["disk"]' \
     habitat_baselines.video_dir=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/eval/video_pick_teacher \
-    habitat_baselines.eval_ckpt_path_dir=/srv/flash1/smohanty61/results/pick_policy/train/checkpoints_pick_teacher/ckpt.0.pth \
-    habitat_baselines.test_episode_count=5
+    habitat_baselines.eval_ckpt_path_dir=/srv/flash1/smohanty61/results/pick_policy/train/checkpoints_pick_teacher/ckpt.6.pth \
+    habitat_baselines.test_episode_count=5 \
+    habitat_baselines.eval.video_option='["disk"]'
 
 # habitat_baselines.num_environments=20 consumes ~ 42 MiB with 2 gpu a40
