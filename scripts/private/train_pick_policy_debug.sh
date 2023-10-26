@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=pick_rewardv3_train
+#SBATCH --job-name=pick_reward
 #SBATCH --chdir /srv/cvmlp-lab/flash1/smohanty61/habitat-lab
 #SBATCH --output=/srv/cvmlp-lab/flash1/smohanty61/checkpoint/train/pick_reward.log
 #SBATCH --error=/srv/cvmlp-lab/flash1/smohanty61/checkpoint/train/pick_reward.err
@@ -16,7 +16,7 @@ srun /nethome/smohanty61/flash/miniconda/envs/clip_grip/bin/python -u -m open_vo
     habitat_baselines.evaluate=False \
     habitat_baselines.tensorboard_dir=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/train/tb_pick_reward \
     habitat_baselines.checkpoint_folder=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/train/checkpoints_pick_reward \
-    habitat_baselines.num_environments=18 \
+    habitat_baselines.num_environments=2 \
     habitat_baselines.load_resume_state_config=False
 
 # habitat_baselines.num_environments=20 consumes ~ 42 MiB with 2 gpu a40

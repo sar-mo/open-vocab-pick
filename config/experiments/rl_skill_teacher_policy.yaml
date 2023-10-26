@@ -18,6 +18,17 @@ defaults:
     - joint_sensor
     - end_effector_sensor
     - arm_binary_mask_sensor
+  - /habitat/task/measurements:
+    - articulated_agent_force
+    - force_terminate
+    - articulated_agent_colls
+    - collisions_terminate
+    - end_effector_to_object_distance
+    - did_pick_object
+    - pick_success_v2
+    - pick_reward_v2
+    - did_violate_hold_constraint
+    - num_steps
   - _self_
 
 # pick_spot drop-in replacement
@@ -45,19 +56,25 @@ habitat:
         articulated_agent_urdf: ./data/robots/hab_spot_arm/urdf/hab_spot_arm.urdf
         articulated_agent_type: SpotRobot
         sim_sensors:
+          # arm_depth_sensor:
+          #   height: 480
+          #   width: 640
+          #   hfov: 47
           arm_depth_sensor:
-            height: 480
-            width: 640
-            hfov: 47
+            height: 256
+            width: 256
+            hfov: 42 # 90
           arm_panoptic_sensor:
-            height: 480
-            width: 640
-            hfov: 47
+            height: 256
+            width: 256
+            hfov: 42 # 90
     habitat_sim_v0:
       allow_sliding: False
       enable_physics: True
 
   task: # modified
+    reward_measure: "pick_reward_v2"
+    success_measure: "pick_success_v2"
     measurements:
       force_terminate:
         max_accum_force: -1.0

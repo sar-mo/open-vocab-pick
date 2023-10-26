@@ -9,7 +9,6 @@
 #SBATCH --ntasks-per-node 1
 #SBATCH --requeue
 #SBATCH --partition short
-#SBATCH --constraint a40
 
 srun /nethome/smohanty61/flash/miniconda/envs/clip_grip/bin/python -u -m habitat_baselines.run \
     --config-name=rearrange/rl_skill.yaml \
@@ -33,10 +32,10 @@ srun /nethome/smohanty61/flash/miniconda/envs/clip_grip/bin/python -u -m habitat
     habitat.task.measurements.collisions_terminate.max_scene_colls=100.0 \
     habitat_baselines.num_environments=21 \
     habitat_baselines.load_resume_state_config=False \
-    habitat_baselines.eval.video_option='["disk"]' \
-    habitat_baselines.video_dir=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/eval/video_pick_jimmy \
-    habitat_baselines.eval_ckpt_path_dir=/srv/flash1/smohanty61/results/pick_policy/train/checkpoints_pick_jimmy \
-    habitat_baselines.test_episode_count=20
+    habitat_baselines.eval_ckpt_path_dir=/srv/flash1/smohanty61/results/pick_policy/train/checkpoints_pick_jimmy
+    # habitat_baselines.eval.video_option='["disk"]' \
+    # habitat_baselines.video_dir=/srv/cvmlp-lab/flash1/smohanty61/results/pick_policy/eval/video_pick_jimmy \
+    # habitat_baselines.test_episode_count=20
 
 
 # Note that when using habitat_baselines.load_resume_state_config=True, you cannot set habitat_baselines.num_environments to be other value, otherwise, there will be an issue
