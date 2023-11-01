@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=pick_rewardv3_train
+#SBATCH --job-name=pick_reward
 #SBATCH --chdir /srv/cvmlp-lab/flash1/smohanty61/habitat-lab
 #SBATCH --output=/srv/cvmlp-lab/flash1/smohanty61/checkpoint/train/pick_reward.log
 #SBATCH --error=/srv/cvmlp-lab/flash1/smohanty61/checkpoint/train/pick_reward.err
