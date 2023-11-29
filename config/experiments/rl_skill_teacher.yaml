@@ -1,10 +1,34 @@
 # @package _global_
 
 defaults:
-  - /benchmark/rearrange/skills: pick
+  - /benchmark/rearrange/skills: pick_spot
   - /habitat_baselines: habitat_baselines_rl_config_base
+  # - /habitat_baselines/rl/policy@habitat_baselines.rl.policy.main_agent: monolithic
   - /habitat/simulator/sim_sensors@habitat_baselines.eval.extra_sim_sensors.third_rgb_sensor: third_rgb_sensor
+  # - /habitat/simulator/sim_sensors@habitat_baselines.eval.extra_sim_sensors.arm_rgb_sensor: arm_rgb_sensor
+  - override /habitat/task/lab_sensors:
+    - target_start_sensor
+    - joint_sensor
+    - is_holding_sensor
+    - end_effector_sensor
+    - relative_resting_pos_sensor
+    - arm_depth_bbox_sensor
   - _self_
+
+# This yaml is designed specifically for learning a mobile gaze policy for the Boston Dynamics Spot robot.
+# It uses the base pick yaml to define the basic measurements and sensors,
+# and defines the needed observation keys and reward function here to train the policy.
+# The major changes compared to the base pick yaml are the following:
+# (1) obs_keys: we ensure these observations can be obtained from the real robot (Spot)
+# (2) pick_reward: pick reward considers collisions based on a kinematic simulation
+# (3) actions: Spot uses gaze action to pick up the object
+# (4) simulator: we simulate the environment via the kinematic mode to facilitate sim2real transfer
+habitat:
+  gym:
+    obs_keys:
+      - arm_depth_bbox_sensor
+      - articulated_agent_arm_depth
+      - joint
 
 habitat_baselines:
   verbose: False

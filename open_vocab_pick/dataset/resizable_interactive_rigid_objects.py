@@ -2,7 +2,7 @@ import json
 import math
 import multiprocessing
 import os
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 import git
 import habitat_sim
@@ -49,7 +49,7 @@ if "sim" not in globals():
 # @markdown - make_simulator_from_settings
 
 
-def make_cfg(settings: Dict[str, str]) -> habitat_sim.Configuration:
+def make_cfg(settings: Dict[str, Any]) -> habitat_sim.Configuration:
     sim_cfg = habitat_sim.SimulatorConfiguration()
     sim_cfg.gpu_device_id = 0
     sim_cfg.scene_id = settings["scene"]
@@ -138,13 +138,15 @@ def make_cfg(settings: Dict[str, str]) -> habitat_sim.Configuration:
     return habitat_sim.Configuration(sim_cfg, [agent_cfg])
 
 
-def make_default_settings() -> Dict[str, str]:
+def make_default_settings() -> Dict[str, Any]:
     settings = {
         "width": 720,  # Spatial resolution of the observations
         "height": 544,
         # Scene path
         "scene": "./data/scene_datasets/mp3d_example/17DRP5sb8fy/17DRP5sb8fy.glb",
-        "scene_dataset_config": "./data/scene_datasets/mp3d_example/mp3d.scene_dataset_config.json",
+        "scene_dataset_config": (
+            "./data/scene_datasets/mp3d_example/mp3d.scene_dataset_config.json"
+        ),
         "default_agent": 0,
         "sensor_height": 1.5,  # Height of sensors in meters
         "sensor_pitch": -math.pi / 8.0,  # sensor pitch (x rotation in rads)
@@ -166,7 +168,7 @@ def make_simulator_from_settings(sim_settings: Dict[str, str]) -> None:
     global prim_attr_mgr
     global stage_attr_mgr
     global rigid_obj_mgr
-    if sim != None:
+    if sim is not None:
         sim.close()
     # initialize the simulator
     sim = habitat_sim.Simulator(cfg)
@@ -178,9 +180,7 @@ def make_simulator_from_settings(sim_settings: Dict[str, str]) -> None:
     rigid_obj_mgr = sim.get_rigid_object_manager()
 
 
-def simulate(
-    sim: Simulator, dt: float = 1.0, get_frames: bool = True
-) -> Observations:
+def simulate(sim: Simulator, dt: float = 1.0, get_frames: bool = True) -> Observations:
     # simulate dt seconds at 60Hz to the nearest fixed timestep
     print("Simulating " + str(dt) + " world seconds.")
     observations = []
@@ -194,8 +194,8 @@ def simulate(
 
 # Set an object transform relative to the agent state
 def set_object_state_from_agent(
-    sim,
-    obj,
+    sim: Simulator,
+    obj: ManagedRigidObject,
     offset=np.array([0, 2.0, -1.5]),
     orientation=mn.Quaternion(((0, 0, 0), 1)),
 ):
@@ -203,6 +203,7 @@ def set_object_state_from_agent(
     ob_translation = agent_transform.transform_point(offset)
     obj.translation = ob_translation
     obj.rotation = orientation
+
 
 # %%
 # @title Initialize Simulator and Load Scene { display-mode: "form" }
@@ -213,16 +214,18 @@ sim_settings = make_default_settings()
 make_simulator_from_settings(sim_settings)
 
 # %%
-lvis_annotations : Dict[str, List[str]] = objaverse.load_lvis_annotations()
+lvis_annotations: Dict[str, List[str]] = objaverse.load_lvis_annotations()
 lvis_annotations
 
 # just get two categories for now
-lvis_annotations = {k: v for k, v in lvis_annotations.items() \
-                    if k in ["Band_Aid", "Bible"]}
+lvis_annotations = {
+    k: v for k, v in lvis_annotations.items() if k in ["Band_Aid", "Bible"]
+}
 lvis_annotations
 
 # %%
 # download LVIS annotations
+
 
 def download_objects(uids: str) -> Dict:
     """
@@ -237,6 +240,7 @@ def download_objects(uids: str) -> Dict:
     processes = multiprocessing.cpu_count()
     return objaverse.load_objects(uids=uids, download_processes=processes)
 
+
 for category, uids in lvis_annotations.items():
     object_descriptions = download_objects(uids)
 
@@ -245,10 +249,8 @@ introduce_surface = True  # @param{type:"boolean"}
 rigid_obj_mgr.remove_all_objects()
 
 def calculate_scaling_factor(
-        obj_bb_size: Tuple[float, float, float],
-        max_threshold: float,
-        min_threshold: float
-    ) -> float:
+    obj_bb_size: Tuple[float, float, float], max_threshold: float, min_threshold: float
+) -> float:
     """
     Calculate the scaling factor based on object bounding box size and thresholds.
 
@@ -269,12 +271,13 @@ def calculate_scaling_factor(
     else:
         return 1.0  # No scaling required
 
+
 def adjust_object_scale(
-        rigid_obj_mgr: RigidObjectManager,
-        obj_attr_mgr: ObjectAttributesManager,
-        obj: ManagedRigidObject,
-        scale_factor: float
-    ) -> None:
+    rigid_obj_mgr: RigidObjectManager,
+    obj_attr_mgr: ObjectAttributesManager,
+    obj: ManagedRigidObject,
+    scale_factor: float,
+) -> None:
     """
     Adjusts the scale of the object and updates it in the simulation.
 
@@ -295,10 +298,11 @@ def adjust_object_scale(
     # # Add the adjusted object back to the simulation
     # rigid_obj_mgr.add_object_by_template_id(obj_template_id)
 
+
 def generate_objects_info_file(
-        sim: Simulator,
-        lvis_annotations: Dict[str, List[str]],
-    ) -> None:
+    sim: Simulator,
+    lvis_annotations: Dict[str, List[str]],
+) -> None:
     """
     Adds objects to the simulator and saves their scaling factors to a JSON file.
 
@@ -310,7 +314,7 @@ def generate_objects_info_file(
 
     for category, objects in lvis_annotations.items():
         for obj_uid in objects:
-            print(f'uid: {obj_uid}')
+            print(f"uid: {obj_uid}")
             # Download and create a new object template
             obj_file_path = list(download_objects([obj_uid]).values())[0]
             obj_template = obj_attr_mgr.create_new_template(obj_file_path, False)
@@ -327,11 +331,12 @@ def generate_objects_info_file(
 
             objaverse_objects_info[obj_uid] = {
                 "category": category,
-                "scale_factor": scale_factor
+                "scale_factor": scale_factor,
             }
     # Save scaling factors to a JSON file
-    with open('objaverse_objects_info.json', 'w') as json_file:
+    with open("objaverse_objects_info.json", "w") as json_file:
         json.dump(objaverse_objects_info, json_file, indent=4)
+
 
 generate_objects_info_file(sim, lvis_annotations)
 

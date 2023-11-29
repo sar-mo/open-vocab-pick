@@ -17,6 +17,7 @@ data/
 tb/
 train.log
 slurm_logs/
+wandb/
 
 # scripts
 scripts/outputs/

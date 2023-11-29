@@ -1,5 +1,6 @@
-from typing import TYPE_CHECKING, Any, List
+from typing import TYPE_CHECKING, Any, List, Optional
 
+import numpy as np
 from gym.spaces.box import Box
 from habitat.core.registry import registry
 from habitat.core.simulator import (
@@ -10,13 +11,77 @@ from habitat.core.simulator import (
     Simulator,
     VisualObservation,
 )
+from gym import spaces
 from habitat.core.utils import try_cv2_import
 from habitat.datasets.rearrange.rearrange_dataset import RearrangeEpisode
+# from open_vocab_pick
+
+
+import pickle
+
 
 if TYPE_CHECKING:
     from omegaconf import DictConfig
 
 cv2 = try_cv2_import()
+
+# pickling is at least 10x faster than csv
+def load_pickle(path):
+    file = open(path, "rb")
+    data = pickle.load(file)
+    return data
+
+def save_pickle(data, path):
+    file = open(path, "wb")
+    data = pickle.dump(data, file)
+
+@registry.register_sensor
+class ClipObjectGoalSensor(Sensor):
+    r"""A sensor for Object Goal specification as observations which is used in
+    ObjectGoal Navigation. The goal is expected to be specified by object_id or
+    semantic category id, and we will generate the prompt corresponding to it
+    so that it's usable by CLIP's text encoder.
+    Args:
+        sim: a reference to the simulator for calculating task observations.
+        config: a config for the ObjectGoalPromptSensor sensor.
+        dataset: a Object Goal navigation dataset that contains dictionaries
+        of categories id to text mapping.
+    """
+    cls_uuid: str = "clip_objectgoal"
+
+    def __init__(
+        self,
+        *args: Any,
+        config: "DictConfig",
+        **kwargs: Any,
+    ):
+        self.mapping = load_pickle(config.mapping)
+        self.cache = load_pickle(config.cache)
+        super().__init__(config=config)
+
+    def _get_uuid(self, *args: Any, **kwargs: Any) -> str:
+        return self.cls_uuid
+
+    def _get_sensor_type(self, *args: Any, **kwargs: Any):
+        return SensorTypes.SEMANTIC
+
+    def _get_observation_space(self, *args: Any, **kwargs: Any):
+        return spaces.Box(low=-np.inf, high=np.inf, shape=(1024,), dtype=np.float32)
+
+    def get_observation(
+        self,
+        observations,
+        *args: Any,
+        episode: Any,
+        **kwargs: Any,
+    ) -> Optional[int]:
+        # only works with one target for now
+        object_id = list(episode.targets.keys())[0]
+        # remove everything after the last underscore, this is not good behavior, wont' generalize
+        object_id = object_id[:object_id.rfind("_")]
+        object_category = self.mapping[object_id]
+        object_clip_embedding = self.cache[object_category]
+        return object_clip_embedding
 
 
 @registry.register_sensor

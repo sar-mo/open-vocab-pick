@@ -13,6 +13,12 @@ cs = ConfigStore.instance()
 class ArmBinaryMaskSensorConfig(LabSensorConfig):
     type: str = "BinaryMaskSensor"
 
+@dataclass
+class ClipObjectGoalSensorConfig(LabSensorConfig):
+    type: str = "ClipObjectGoalSensor"
+    mapping: str = "data/clip_embeddings/ovmm_objects_mapping.pkl"
+    cache: str = "data/clip_embeddings/ovmm_objects_cache.pkl"
+
 
 # measures
 @dataclass
@@ -33,7 +39,6 @@ class RearrangePickRewardV2MeasurementConfig(MeasurementConfig):
     using_gaze_grasp: bool = True
     gaze_ee_goal_dist: float = 0.4
 
-
 @dataclass
 class RearrangePickSuccessV2MeasurementConfig(MeasurementConfig):
     type: str = "RearrangePickSuccessV2"
@@ -52,6 +57,13 @@ cs.store(
     node=ArmBinaryMaskSensorConfig,
 )
 
+cs.store(
+    package="habitat.task.lab_sensors.clip_objectgoal_sensor",
+    group="habitat/task/lab_sensors",
+    name="clip_objectgoal_sensor",
+    node=ClipObjectGoalSensorConfig,
+)
+
 # measures
 cs.store(
     package="habitat.task.measurements.pick_reward_v2",
@@ -66,7 +78,6 @@ cs.store(
     name="pick_success_v2",
     node=RearrangePickSuccessV2MeasurementConfig,
 )
-
 
 class HabitatConfigPlugin(SearchPathPlugin):
     def manipulate_search_path(self, search_path: ConfigSearchPath) -> None:
